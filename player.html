@@ -23,111 +23,46 @@
             align-items: center;
             min-height: 100vh;
         }
-        .layout-wrapper {
-            display: flex;
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
+        .layout-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1200px; }
         .player-column { flex: 3; }
-        .player-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 */
-            background-color: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .player-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
-        .controls-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; transition: opacity 0.3s ease;
-            display: flex; flex-direction: column; justify-content: space-between;
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 40%);
-        }
-        .player-container:hover .controls-overlay,
-        .player-container.paused .controls-overlay,
-        .player-container.focused .controls-overlay {
-            opacity: 1;
-        }
+        .player-container { position: relative; width: 100%; padding-bottom: 56.25%; background-color: #000; border-radius: 12px; overflow: hidden; }
+        .player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .controls-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 40%); }
+        .player-container:hover .controls-overlay, .player-container.paused .controls-overlay, .player-container.focused .controls-overlay { opacity: 1; }
         .central-play-container { display: flex; justify-content: center; align-items: center; height: 100%; }
-        .central-play-btn {
-            background: rgba(30, 30, 30, 0.7); border: 2px solid rgba(255, 255, 255, 0.8);
-            border-radius: 50%; width: 80px; height: 80px; cursor: pointer;
-            display: flex; justify-content: center; align-items: center;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            color: white; font-size: 40px;
-        }
+        .central-play-btn { background: rgba(30, 30, 30, 0.7); border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 50%; width: 80px; height: 80px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease, background-color 0.2s ease; color: white; font-size: 40px; }
         .central-play-btn:hover { transform: scale(1.1); background: rgba(0, 168, 255, 0.8); }
         .player-container.playing .central-play-container { display: none; }
-        .control-bar {
-            padding: 10px 15px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
+        .control-bar { padding: 10px 15px; display: flex; flex-wrap: wrap; align-items: center; gap: 15px; position: relative; }
         .control-group { display: flex; align-items: center; gap: 15px; }
         .control-group.right { margin-left: auto; }
-        .control-button {
-            background: none; border: none; cursor: pointer; padding: 5px;
-            display: flex; color: white; font-size: 22px;
-        }
+        .control-button { background: none; border: none; cursor: pointer; padding: 5px; display: flex; color: white; font-size: 22px; }
         .control-button:hover { transform: scale(1.15); }
         .play-pause-btn .pause-icon { display: none; }
         .player-container.playing .play-pause-btn .play-icon { display: none; }
         .player-container.playing .play-pause-btn .pause-icon { display: block; }
-        .progress-bar-container {
-            width: 100%;
-            order: -1; /* Make it appear on top */
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            border-radius: 5px;
-        }
+        .progress-bar-container { width: 100%; order: -1; height: 5px; background-color: rgba(255, 255, 255, 0.3); cursor: pointer; border-radius: 5px; }
         .progress-bar-fill { height: 100%; background-color: var(--vimeo-blue); border-radius: 5px; width: 0%; }
         .time-display { font-size: 0.9em; user-select: none; }
         .volume-container { display: flex; align-items: center; gap: 8px; }
         .volume-slider { -webkit-appearance: none; appearance: none; width: 70px; height: 5px; background: rgba(255, 255, 255, 0.3); border-radius: 5px; outline: none; transition: width 0.2s ease-in-out; }
         .volume-container:hover .volume-slider { width: 80px; }
         .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; background: white; cursor: pointer; border-radius: 50%; }
-        .volume-slider::-moz-range-thumb { width: 15px; height: 15px; background: white; cursor: pointer; border-radius: 50%; }
+        .volume-slider::-moz-range-thumb { width: 15px; height: 15px; background: white; cursor: pointer; border-radius: 50%; border: none; }
         .volume-btn .volume-high-icon { display: block; }
         .volume-btn .volume-mute-icon { display: none; }
         .player-container.muted .volume-btn .volume-high-icon { display: none; }
         .player-container.muted .volume-btn .volume-mute-icon { display: block; }
-        .settings-menu {
-            position: absolute; bottom: 60px; right: 10px;
-            background-color: var(--dark-surface); border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px;
-            visibility: hidden; opacity: 0; transform: translateY(10px);
-            transition: all 0.2s ease;
-            z-index: 10;
-        }
+        .settings-menu { position: absolute; bottom: 60px; right: 10px; background-color: var(--dark-surface); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px; visibility: hidden; opacity: 0; transform: translateY(10px); transition: all 0.2s ease; z-index: 10; }
         .settings-menu.visible { visibility: visible; opacity: 1; transform: translateY(0); }
         .settings-menu-view { padding: 8px; }
-        .settings-menu-item {
-            background: none; border: none; color: var(--text-light); font-size: 1em; width: 100%;
-            padding: 10px 12px; cursor: pointer; display: flex;
-            justify-content: space-between; align-items: center; border-radius: 4px; text-align: left;
-        }
+        .settings-menu-item { background: none; border: none; color: var(--text-light); font-size: 1em; width: 100%; padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-radius: 4px; text-align: left; }
         .settings-menu-item:hover { background-color: #333; }
         .settings-menu-item .current-value { color: #aaa; }
         .settings-menu-item.active { background-color: var(--vimeo-blue); color: #000; font-weight: bold; }
         .menu-header { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #444; font-weight: bold; }
         .back-btn { margin-right: 10px; cursor: pointer; }
-        .transcript-column {
-            flex: 1.2;
-            background-color: var(--dark-surface);
-            border-radius: 12px;
-            padding: 15px;
-            max-height: calc(1200px * 0.75 * 0.5625);
-            overflow-y: auto;
-            display: none;
-        }
+        .transcript-column { flex: 1.2; background-color: var(--dark-surface); border-radius: 12px; padding: 15px; max-height: calc(1200px * 0.75 * 0.5625); overflow-y: auto; display: none; }
         .transcript-column.visible { display: block; }
         .transcript-line { padding: 8px; margin-bottom: 5px; border-radius: 4px; transition: background-color 0.3s ease; cursor: pointer; }
         .transcript-line:hover { background-color: #333; }
@@ -135,48 +70,47 @@
         .hidden { display: none; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
+    <script>
+        document.onkeydown = function(e) {
+            if (event.keyCode == 123) { // F12
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { // Ctrl+Shift+I
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { // Ctrl+Shift+C
+                return false;
+            }
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // Ctrl+U
+                return false;
+            }
+        };
+    </script>
+    
     <div class="layout-wrapper">
         <div class="player-column">
             <div id="player-container" class="player-container paused">
-                <iframe id="vimeo-player"
-                        src="https://player.vimeo.com/video/766721106?app_id=122963&controls=0&dnt=1"
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowfullscreen></iframe>
-
+                <iframe id="vimeo-player" src="https://player.vimeo.com/video/766721106?app_id=122963&controls=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                 <div id="controls-overlay" class="controls-overlay">
-                    <div class="central-play-container">
-                        <button id="central-play-btn" class="central-play-btn" aria-label="Phát video">▶</button>
-                    </div>
-
+                    <div class="central-play-container"><button id="central-play-btn" class="central-play-btn" aria-label="Phát video">▶</button></div>
                     <div class="control-bar">
-                        <div class="progress-bar-container" id="progress-bar-container">
-                            <div class="progress-bar-fill" id="progress-bar-fill"></div>
-                        </div>
-
+                        <div class="progress-bar-container" id="progress-bar-container"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
                         <div class="control-group left">
-                            <button id="play-pause-btn" class="control-button" aria-label="Phát hoặc Tạm dừng">
-                                <span class="play-icon">▶</span>
-                                <span class="pause-icon">❚❚</span>
-                            </button>
+                            <button id="play-pause-btn" class="control-button" aria-label="Phát hoặc Tạm dừng"><span class="play-icon">▶</span><span class="pause-icon">❚❚</span></button>
                             <div class="volume-container">
-                                <button id="volume-btn" class="control-button volume-btn" aria-label="Tắt/Bật tiếng">
-                                    <span class="volume-high-icon">🔊</span>
-                                    <span class="volume-mute-icon">🔇</span>
-                                </button>
+                                <button id="volume-btn" class="control-button volume-btn" aria-label="Tắt/Bật tiếng"><span class="volume-high-icon">🔊</span><span class="volume-mute-icon">🔇</span></button>
                                 <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Điều chỉnh âm lượng">
                             </div>
                             <div id="time-display" class="time-display">00:00 / 00:00</div>
                         </div>
-
                         <div class="control-group right">
                             <button id="transcript-btn" class="control-button" aria-label="Bật/Tắt Lời thoại">📝</button>
                             <button id="settings-btn" class="control-button" aria-label="Mở Cài đặt">⚙️</button>
                             <button id="fullscreen-btn" class="control-button" aria-label="Toàn màn hình">⛶</button>
                         </div>
                     </div>
-
                     <div id="settings-menu" class="settings-menu">
                         <div id="main-menu-view" class="settings-menu-view">
                             <button id="quality-menu-btn" class="settings-menu-item"><span>Chất lượng</span><span id="current-quality" class="current-value">Tự động</span></button>
@@ -192,211 +126,221 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const iframe = document.querySelector('#vimeo-player');
-            const player = new Vimeo.Player(iframe);
-            const playerContainer = document.getElementById('player-container');
-            const centralPlayBtn = document.getElementById('central-play-btn');
-            const playPauseBtn = document.getElementById('play-pause-btn');
-            const timeDisplay = document.getElementById('time-display');
-            const progressBarContainer = document.getElementById('progress-bar-container');
-            const progressBarFill = document.getElementById('progress-bar-fill');
-            const fullscreenBtn = document.getElementById('fullscreen-btn');
-            const transcriptBtn = document.getElementById('transcript-btn');
-            const transcriptColumn = document.getElementById('transcript-column');
-            const volumeBtn = document.getElementById('volume-btn');
-            const volumeSlider = document.getElementById('volume-slider');
-            const settingsBtn = document.getElementById('settings-btn');
-            const settingsMenu = document.getElementById('settings-menu');
-            const mainMenuView = document.getElementById('main-menu-view');
-            const qualityMenuView = document.getElementById('quality-menu-view');
-            const speedMenuView = document.getElementById('speed-menu-view');
-            const qualityMenuBtn = document.getElementById('quality-menu-btn');
-            const speedMenuBtn = document.getElementById('speed-menu-btn');
-            const qualityOptionsContainer = document.getElementById('quality-options');
-            const speedOptionsContainer = document.getElementById('speed-options');
-            const currentQualityEl = document.getElementById('current-quality');
-            const currentSpeedEl = document.getElementById('current-speed');
-            const backBtns = document.querySelectorAll('.back-btn');
-
-            // Trong ứng dụng thực tế, dữ liệu này nên được tải từ một file hoặc API
-            const transcriptData = [
-                { start: 0, end: 4.13, text: "In this video, we're going to look at a few examples of..." },
-                { start: 4.13, end: 8.43, text: "how to use the Vimeo Player API to create custom controls." },
-                { start: 8.43, end: 11.27, text: "You can do many things with it, like play, pause," },
-                { start: 11.27, end: 14.89, text: "seek to a specific time, and even control the volume." },
-                { start: 14.89, end: 18.35, text: "It also provides events, so you can update your UI in real-time." },
-                { start: 18.35, end: 21.43, text: "For instance, the 'timeupdate' event is crucial for progress bars." },
-                { start: 21.43, end: 24.5, text: "And here we see a beautiful shot of the mountains." },
-                { start: 24.5, end: 28.0, text: "Notice how the text highlights as the video plays." },
-                { start: 28.0, end: 32.0, text: "This creates a much more engaging experience for the viewer." }
-            ];
-
-            let transcriptLines = [];
-            let currentHighlightIndex = -1;
-            let duration = 0;
-
-            const formatTime = (seconds) => {
-                const date = new Date(seconds * 1000);
-                const hh = date.getUTCHours();
-                const mm = date.getUTCMinutes();
-                const ss = date.getUTCSeconds().toString().padStart(2, '0');
-                return hh ? `${hh}:${mm.toString().padStart(2, '0')}:${ss}` : `${mm}:${ss}`;
-            };
-
-            const togglePlay = () => {
-                player.getPaused().then(paused => paused ? player.play() : player.pause());
-            };
-
-            const renderTranscript = () => {
-                transcriptColumn.innerHTML = '';
-                transcriptData.forEach((line) => {
-                    const p = document.createElement('p');
-                    p.className = 'transcript-line';
-                    p.textContent = line.text;
-                    p.dataset.startTime = line.start;
-                    p.tabIndex = 0;
-                    p.setAttribute('role', 'button');
-                    p.addEventListener('click', () => player.setCurrentTime(line.start));
-                    p.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') player.setCurrentTime(line.start);
+        (function(_0x3e8a4a, _0x1a7165) {
+            const _0x5a8a9d = _0x2776,
+                _0x2e067c = _0x3e8a4a();
+            while (!![]) {
+                try {
+                    const _0x1c3857 = -parseInt(_0x5a8a9d(0x13c)) / 0x1 * (parseInt(_0x5a8a9d(0x10a)) / 0x2) + -parseInt(_0x5a8a9d(0x117)) / 0x3 * (-parseInt(_0x5a8a9d(0x10b)) / 0x4) + -parseInt(_0x5a8a9d(0x126)) / 0x5 + parseInt(_0x5a8a9d(0x11e)) / 0x6 + parseInt(_0x5a8a9d(0xfd)) / 0x7 + -parseInt(_0x5a8a9d(0x12c)) / 0x8 + parseInt(_0x5a8a9d(0x125)) / 0x9;
+                    if (_0x1c3857 === _0x1a7165) break;
+                    else _0x2e067c['push'](_0x2e067c['shift']());
+                } catch (_0x2173f2) {
+                    _0x2e067c['push'](_0x2e067c['shift']());
+                }
+            }
+        }(_0x2776c8, 0xe177e));
+        document['addEventListener']('DOMContentLoaded', () => {
+            const _0x1b4181 = _0x2776,
+                _0x37a4e8 = document['querySelector'](_0x1b4181(0x11f)),
+                _0x550e26 = new Vimeo[_0x1b4181(0x13a)](_0x37a4e8),
+                _0x256e1b = document[_0x1b4181(0x100)](_0x1b4181(0xf5)),
+                _0x3a48e8 = document[_0x1b4181(0x100)]('central-play-btn'),
+                _0x240683 = document['getElementById'](_0x1b4181(0x12a)),
+                _0x5466c1 = document['getElementById'](_0x1b4181(0x120)),
+                _0x2c6453 = document[_0x1b4181(0x100)]('progress-bar-container'),
+                _0x21f7c3 = document[_0x1b4181(0x100)](_0x1b4181(0x11d)),
+                _0x3a197b = document['getElementById'](_0x1b4181(0x139)),
+                _0x50f75e = document['getElementById']('transcript-btn'),
+                _0x3213c9 = document['getElementById'](_0x1b4181(0x119)),
+                _0x5436f5 = document[_0x1b4181(0x100)]('volume-btn'),
+                _0x165b4c = document[_0x1b4181(0x100)]('volume-slider'),
+                _0x3344b1 = document['getElementById'](_0x1b4181(0xf6)),
+                _0x5895e6 = document[_0x1b4181(0x100)](_0x1b4181(0x10e)),
+                _0x1f1f9a = document[_0x1b4181(0x100)]('main-menu-view'),
+                _0x23a6f1 = document[_0x1b4181(0x100)](_0x1b4181(0x121)),
+                _0x4c9f13 = document[_0x1b4181(0x100)](_0x1b4181(0x10d)),
+                _0x1e36c5 = document['getElementById'](_0x1b4181(0x113)),
+                _0x18a77d = document['getElementById']('speed-menu-btn'),
+                _0x446e12 = document['getElementById']('quality-options'),
+                _0x40317e = document['getElementById'](_0x1b4181(0x138)),
+                _0x4296c0 = document[_0x1b4181(0x100)]('current-quality'),
+                _0x105c3b = document[_0x1b4181(0x100)](_0x1b4181(0x129)),
+                _0x421e42 = document['querySelectorAll']('.back-btn'),
+                _0x52462e = [{
+                    'start': 0x0,
+                    'end': 0x4.21,
+                    'text': _0x1b4181(0x11c)
+                }, {
+                    'start': 0x4.21,
+                    'end': 0x8.6f,
+                    'text': _0x1b4181(0xfb)
+                }, {
+                    'start': 0x8.6f,
+                    'end': 0xb.45,
+                    'text': _0x1b4181(0x104)
+                }, {
+                    'start': 0xb.45,
+                    'end': 0xe.e5,
+                    'text': _0x1b4181(0x109)
+                }, {
+                    'start': 0xe.e5,
+                    'end': 0x12.5b,
+                    'text': _0x1b4181(0x136)
+                }, {
+                    'start': 0x12.5b,
+                    'end': 0x15.6f,
+                    'text': _0x1b4181(0x135)
+                }, {
+                    'start': 0x15.6f,
+                    'end': 0x18.8,
+                    'text': _0x1b4181(0x107)
+                }, {
+                    'start': 0x18.8,
+                    'end': 0x1c,
+                    'text': _0x1b4181(0x114)
+                }, {
+                    'start': 0x1c,
+                    'end': 0x20,
+                    'text': 'This\x20creates\x20a\x20much\x20more\x20engaging\x20experience\x20for\x20the\x20viewer.'
+                }];
+            let _0x4d324b = [],
+                _0x4455d3 = -0x1,
+                _0x1c2438 = 0x0;
+            const _0x5d96a6 = _0x2b3804 => {
+                    const _0x41f879 = _0x1b4181,
+                        _0x2f155a = new Date(_0x2b3804 * 0x3e8),
+                        _0x43b23c = _0x2f155a['getUTCHours'](),
+                        _0x356345 = _0x2f155a[_0x41f879(0x106)](),
+                        _0x546d1b = _0x2f155a['getUTCSeconds']()[_0x41f879(0x122)]()[_0x41f879(0x111)](0x2, '0');
+                    return _0x43b23c ? _0x43b23c + ':' + _0x356345[_0x41f879(0x122)]()['padStart'](0x2, '0') + ':' + _0x546d1b : _0x356345 + ':' + _0x546d1b;
+                },
+                _0x135e80 = () => {
+                    const _0x345e57 = _0x1b4181;
+                    _0x550e26[_0x345e57(0xfc)]()['then'](_0x4b6651 => _0x4b6651 ? _0x550e26['play']() : _0x550e26[_0x345e57(0x12d)]());
+                },
+                _0x221227 = () => {
+                    const _0x3c26a5 = _0x1b4181;
+                    _0x3213c9['innerHTML'] = '', _0x52462e['forEach'](_0x5bf492 => {
+                        const _0x3d7065 = _0x3c26a5,
+                            _0x46452f = document['createElement']('p');
+                        _0x46452f['className'] = 'transcript-line', _0x46452f[_0x3d7065(0xff)] = _0x5bf492['text'], _0x46452f['dataset']['startTime'] = _0x5bf492['start'], _0x46452f['tabIndex'] = 0x0, _0x46452f['setAttribute']('role', 'button'), _0x46452f[_0x3d7065(0x12e)]('click', () => _0x550e26[_0x3d7065(0xfe)](_0x5bf492['start'])), _0x46452f['addEventListener']('keydown', _0x17c92b => {
+                            const _0x42f746 = _0x3d7065;
+                            (_0x17c92b['key'] === _0x42f746(0x124) || _0x17c92b['key'] === '\x20') && _0x550e26[_0x42f746(0xfe)](_0x5bf492['start']);
+                        }), _0x3213c9['appendChild'](_0x46452f), _0x4d324b['push'](_0x46452f);
                     });
-                    transcriptColumn.appendChild(p);
-                    transcriptLines.push(p);
-                });
-            };
-
-            const updateTranscriptHighlight = (currentTime) => {
-                const newHighlightIndex = transcriptData.findIndex(line => currentTime >= line.start && currentTime < line.end);
-                if (newHighlightIndex !== -1 && newHighlightIndex !== currentHighlightIndex) {
-                    if (currentHighlightIndex !== -1) {
-                        transcriptLines[currentHighlightIndex].classList.remove('highlight');
-                    }
-                    transcriptLines[newHighlightIndex].classList.add('highlight');
-                    transcriptLines[newHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    currentHighlightIndex = newHighlightIndex;
+                },
+                _0x49f3e4 = _0x278e90 => {
+                    const _0x2ce19c = _0x1b4181,
+                        _0x296e83 = _0x52462e['findIndex'](_0x1774e4 => _0x278e90 >= _0x1774e4['start'] && _0x278e90 < _0x1774e4['end']);
+                    _0x296e83 !== -0x1 && _0x296e83 !== _0x4455d3 && (_0x4455d3 !== -0x1 && _0x4d324b[_0x4455d3]['classList']['remove'](_0x2ce19c(0xfa)), _0x4d324b[_0x296e83]['classList']['add'](_0x2ce19c(0xfa)), _0x4d324b[_0x296e83][_0x2ce19c(0x130)]({
+                        'behavior': 'smooth',
+                        'block': _0x2ce19c(0x10f)
+                    }), _0x4455d3 = _0x296e83);
+                },
+                _0x29ab3c = [0.5, 0.75, 0x1, 0x1.25, 0x1.5, 0x2],
+                _0x3b0705 = _0x1258dc => {
+                    const _0x3e108e = _0x1b4181;
+                    _0x1f1f9a['classList']['add'](_0x3e108e(0x105)), _0x23a6f1['classList']['add'](_0x3e108e(0x105)), _0x4c9f13['classList']['add']('hidden'), _0x1258dc['classList']['remove'](_0x3e108e(0x105));
+                };
+            _0x3344b1[_0x1b4181(0x12e)](_0x1b4181(0x116), _0x3e74d1 => {
+                const _0x2e92c6 = _0x1b4181;
+                _0x3e74d1['stopPropagation'](), _0x5895e6['classList']['toggle'](_0x2e92c6(0x112)), _0x3b0705(_0x1f1f9a);
+            }), _0x1e36c5[_0x1b4181(0x12e)](_0x1b4181(0x116), () => _0x3b0705(_0x23a6f1)), _0x18a77d[_0x1b4181(0x12e)](_0x1b4181(0x116), () => _0x3b0705(_0x4c9f13)), _0x421e42['forEach'](_0x420fd1 => _0x420fd1['addEventListener'](_0x1b4181(0x116), () => _0x3b0705(_0x1f1f9a))), document[_0x1b4181(0x12e)](_0x1b4181(0x116), _0x3f538e => {
+                const _0x2d17c7 = _0x1b4181;
+                !_0x5895e6['contains'](_0x3f538e['target']) && !_0x3344b1['contains'](_0x3f538e['target']) && _0x5895e6['classList'][_0x2d17c7(0x12f)](_0x2d17c7(0x112));
+            });
+            const _0x1b606d = _0x286e7a => {
+                    const _0x539c04 = _0x1b4181;
+                    _0x446e12['innerHTML'] = '';
+                    let _0x2076fa = _0x539c04(0x133);
+                    const _0x538d50 = document['createElement']('button');
+                    _0x538d50['className'] = 'settings-menu-item', _0x538d50['textContent'] = _0x539c04(0x133), !_0x286e7a['some'](_0x1d5d1c => _0x1d5d1c[_0x539c04(0xf9)]) && _0x538d50['classList']['add']('active'), _0x538d50[_0x539c04(0x12e)](_0x539c04(0x116), () => {
+                        const _0x46e7f8 = _0x539c04;
+                        _0x550e26['setQuality'](_0x46e7f8(0x11a)), _0x5895e6['classList'][_0x46e7f8(0x12f)](_0x46e7f8(0x112));
+                    }), _0x446e12['appendChild'](_0x538d50), _0x286e7a['forEach'](_0x403d6d => {
+                        const _0x1a8f33 = _0x539c04,
+                            _0x46d84f = document[_0x1a8f33(0x101)]('button');
+                        _0x46d84f['className'] = _0x1a8f33(0x103), _0x46d84f[_0x1a8f33(0xff)] = _0x403d6d['label'], _0x403d6d[_0x1a8f33(0xf9)] && (_0x46d84f['classList']['add'](_0x1a8f33(0xf9)), _0x2076fa = _0x403d6d['label']), _0x46d84f['addEventListener']('click', () => {
+                            const _0x4a1804 = _0x1a8f33;
+                            _0x550e26[_0x4a1804(0x110)](_0x403d6d['id']), _0x5895e6['classList'][_0x4a1804(0x12f)](_0x4a1804(0x112));
+                        }), _0x446e12[_0x1a8f33(0x115)](_0x46d84f);
+                    }), _0x4296c0[_0x539c04(0xff)] = _0x2076fa;
+                },
+                _0x1b28d7 = _0x3b067a => {
+                    const _0x33e8b8 = _0x1b4181;
+                    _0x40317e['innerHTML'] = '', _0x29ab3c['forEach'](_0x4523b0 => {
+                        const _0x5503b4 = _0x33e8b8,
+                            _0x531f85 = document[_0x5503b4(0x101)]('button');
+                        _0x531f85['className'] = _0x5503b4(0x103), _0x531f85[_0x5503b4(0xff)] = _0x4523b0 === 0x1 ? 'Bình\x20thường' : _0x4523b0 + 'x', _0x4523b0 === _0x3b067a && _0x531f85['classList']['add']('active'), _0x531f85[_0x5503b4(0x12e)](_0x5503b4(0x116), () => {
+                            const _0x23b811 = _0x5503b4;
+                            _0x550e26['setPlaybackRate'](_0x4523b0), _0x5895e6['classList'][_0x23b811(0x12f)](_0x23b811(0x112));
+                        }), _0x40317e[_0x5503b4(0x115)](_0x531f85);
+                    }), _0x105c3b[_0x33e8b8(0xff)] = _0x3b067a === 0x1 ? _0x33e8b8(0x132) : _0x3b067a + 'x';
+                };
+            _0x550e26['on'](_0x1b4181(0x131), () => {
+                const _0x1c3127 = _0x1b4181;
+                _0x550e26['getDuration']()['then'](_0x39589d => {
+                    const _0x4f64d0 = _0x1c3127;
+                    _0x1c2438 = _0x39589d, _0x5466c1['textContent'] = '00:00\x20/\x20' + _0x5d96a6(_0x1c2438);
+                }), _0x550e26['getQualities']()['then'](_0x4e6c38 => _0x1b606d(_0x4e6c38)), _0x1b28d7(0x1), _0x221227();
+            }), _0x550e26['on']('play', () => {
+                const _0x531405 = _0x1b4181;
+                _0x256e1b['classList']['remove'](_0x531405(0x11b)), _0x256e1b['classList'][_0x531405(0x128)](_0x531405(0xf7)), _0x240683[_0x531405(0x102)](_0x531405(0x127), 'Tạm\x20dừng');
+            }), _0x550e26['on'](_0x1b4181(0x12d), () => {
+                const _0x51cbe5 = _0x1b4181;
+                _0x256e1b['classList']['add']('paused'), _0x256e1b['classList'][_0x51cbe5(0x12f)](_0x51cbe5(0xf7)), _0x240683['setAttribute']('aria-label', 'Phát');
+            }), _0x550e26['on'](_0x1b4181(0xf8), _0x3f1e1f => {
+                const _0x3e1577 = _0x1b4181;
+                _0x21f7c3['style']['width'] = _0x3f1e1f['percent'] * 0x64 + '%', _0x5466c1['textContent'] = '' + _0x5d96a6(_0x3f1e1f['seconds']) + '\x20/\x20' + _0x5d96a6(_0x1c2438), _0x49f3e4(_0x3f1e1f['seconds']);
+            }), _0x550e26['on'](_0x1b4181(0x123), () => _0x550e26[_0x1b4181(0x134)]()['then'](_0x378f4a => _0x1b606d(_0x378f4a))), _0x550e26['on'](_0x1b4181(0x137), _0x367f0f => _0x1b28d7(_0x367f0f[_0x1b4181(0x118)])), _0x550e26['on']('volumechange', _0x11bf0e => {
+                const _0x3a54ef = _0x1b4181;
+                _0x165b4c['value'] = _0x11bf0e['volume'], _0x256e1b['classList']['toggle']('muted', _0x11bf0e['volume'] === 0x0), _0x5436f5['setAttribute']('aria-label', _0x11bf0e['volume'] === 0x0 ? 'Bật\x20tiếng' : _0x3a54ef(0x108));
+            }), _0x3a48e8['addEventListener'](_0x1b4181(0x116), _0x135e80), _0x240683[_0x1b4181(0x12e)](_0x1b4181(0x116), _0x135e80), _0x3a197b['addEventListener'](_0x1b4181(0x116), () => _0x550e26['requestFullscreen']()), _0x2c6453[_0x1b4181(0x12e)](_0x1b4181(0x116), _0x4a9d70 => {
+                const _0x45a278 = _0x1b4181,
+                    _0x376481 = _0x2c6453[_0x45a278(0x12b)](),
+                    _0x5471b0 = _0x1c2438 * ((_0x4a9d70['clientX'] - _0x376481['left']) / _0x376481['width']);
+                _0x550e26[_0x45a278(0xfe)](_0x5471b0);
+            }), _0x50f75e['addEventListener']('click', () => _0x3213c9['classList']['toggle']('visible')), _0x165b4c['addEventListener']('input', _0x334468 => _0x550e26['setVolume'](_0x334468['target']['value'])), _0x5436f5['addEventListener']('click', () => {
+                _0x550e26['getVolume']()['then'](_0x22c2a0 => _0x550e26['setVolume'](_0x22c2a0 > 0x0 ? 0x0 : 0x1));
+            }), document['addEventListener']('keydown', _0x280e22 => {
+                const _0x2e06c7 = _0x1b4181;
+                if (_0x280e22['target']['tagName'] === 'INPUT' || _0x280e22['target']['tagName'] === 'TEXTAREA') return;
+                switch (_0x280e22['key'][_0x2e06c7(0x10c)]()) {
+                    case '\x20':
+                        _0x280e22['preventDefault'](), _0x135e80();
+                        break;
+                    case 'm':
+                        _0x5436f5[_0x2e06c7(0x116)]();
+                        break;
+                    case 'f':
+                        _0x3a197b['click']();
+                        break;
+                    case 'arrowright':
+                        _0x550e26[_0x2e06c7(0x13b)]()['then'](_0x3f7af9 => _0x550e26['setCurrentTime'](_0x3f7af9 + 0x5));
+                        break;
+                    case 'arrowleft':
+                        _0x550e26['getCurrentTime']()['then'](_0x34464c => _0x550e26[_0x2e06c7(0xfe)](_0x34464c - 0x5));
+                        break;
                 }
-            };
-
-            const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-            const showMenuView = (viewToShow) => {
-                mainMenuView.classList.add('hidden');
-                qualityMenuView.classList.add('hidden');
-                speedMenuView.classList.add('hidden');
-                viewToShow.classList.remove('hidden');
-            };
-
-            settingsBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                settingsMenu.classList.toggle('visible');
-                showMenuView(mainMenuView);
-            });
-            qualityMenuBtn.addEventListener('click', () => showMenuView(qualityMenuView));
-            speedMenuBtn.addEventListener('click', () => showMenuView(speedMenuView));
-            backBtns.forEach(btn => btn.addEventListener('click', () => showMenuView(mainMenuView)));
-            document.addEventListener('click', (e) => {
-                if (!settingsMenu.contains(e.target) && !settingsBtn.contains(e.target)) {
-                    settingsMenu.classList.remove('visible');
-                }
-            });
-
-            const renderQualityOptions = (qualities) => {
-                qualityOptionsContainer.innerHTML = '';
-                let activeQualityLabel = 'Tự động';
-                const autoItem = document.createElement('button');
-                autoItem.className = 'settings-menu-item';
-                autoItem.textContent = 'Tự động';
-                if (!qualities.some(q => q.active)) autoItem.classList.add('active');
-                autoItem.addEventListener('click', () => { player.setQuality('auto'); settingsMenu.classList.remove('visible'); });
-                qualityOptionsContainer.appendChild(autoItem);
-                qualities.forEach(q => {
-                    const item = document.createElement('button');
-                    item.className = 'settings-menu-item';
-                    item.textContent = q.label;
-                    if (q.active) {
-                        item.classList.add('active');
-                        activeQualityLabel = q.label;
-                    }
-                    item.addEventListener('click', () => { player.setQuality(q.id); settingsMenu.classList.remove('visible'); });
-                    qualityOptionsContainer.appendChild(item);
-                });
-                currentQualityEl.textContent = activeQualityLabel;
-            };
-
-            const renderSpeedOptions = (currentRate) => {
-                speedOptionsContainer.innerHTML = '';
-                speeds.forEach(speed => {
-                    const item = document.createElement('button');
-                    item.className = 'settings-menu-item';
-                    item.textContent = speed === 1 ? 'Bình thường' : `${speed}x`;
-                    if (speed === currentRate) item.classList.add('active');
-                    item.addEventListener('click', () => { player.setPlaybackRate(speed); settingsMenu.classList.remove('visible'); });
-                    speedOptionsContainer.appendChild(item);
-                });
-                currentSpeedEl.textContent = currentRate === 1 ? 'Bình thường' : `${currentRate}x`;
-            };
-
-            player.on('loaded', () => {
-                player.getDuration().then(d => {
-                    duration = d;
-                    timeDisplay.textContent = `00:00 / ${formatTime(duration)}`;
-                });
-                player.getQualities().then(q => renderQualityOptions(q));
-                renderSpeedOptions(1);
-                renderTranscript();
-            });
-
-            player.on('play', () => {
-                playerContainer.classList.remove('paused');
-                playerContainer.classList.add('playing');
-                playPauseBtn.setAttribute('aria-label', 'Tạm dừng');
-            });
-            player.on('pause', () => {
-                playerContainer.classList.add('paused');
-                playerContainer.classList.remove('playing');
-                playPauseBtn.setAttribute('aria-label', 'Phát');
-            });
-            player.on('timeupdate', (data) => {
-                progressBarFill.style.width = `${data.percent * 100}%`;
-                timeDisplay.textContent = `${formatTime(data.seconds)} / ${formatTime(duration)}`;
-                updateTranscriptHighlight(data.seconds);
-            });
-            player.on('qualitychange', () => player.getQualities().then(q => renderQualityOptions(q)));
-            player.on('playbackratechange', (data) => renderSpeedOptions(data.playbackRate));
-            player.on('volumechange', (data) => {
-                volumeSlider.value = data.volume;
-                playerContainer.classList.toggle('muted', data.volume === 0);
-                volumeBtn.setAttribute('aria-label', data.volume === 0 ? 'Bật tiếng' : 'Tắt tiếng');
-            });
-
-            centralPlayBtn.addEventListener('click', togglePlay);
-            playPauseBtn.addEventListener('click', togglePlay);
-            fullscreenBtn.addEventListener('click', () => player.requestFullscreen());
-            progressBarContainer.addEventListener('click', (e) => {
-                const rect = progressBarContainer.getBoundingClientRect();
-                const newTime = duration * ((e.clientX - rect.left) / rect.width);
-                player.setCurrentTime(newTime);
-            });
-            transcriptBtn.addEventListener('click', () => transcriptColumn.classList.toggle('visible'));
-            volumeSlider.addEventListener('input', (e) => player.setVolume(e.target.value));
-            volumeBtn.addEventListener('click', () => {
-                player.getVolume().then(volume => player.setVolume(volume > 0 ? 0 : 1));
-            });
-            
-            document.addEventListener('keydown', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-                switch(e.key.toLowerCase()) {
-                    case ' ': e.preventDefault(); togglePlay(); break;
-                    case 'm': volumeBtn.click(); break;
-                    case 'f': fullscreenBtn.click(); break;
-                    case 'arrowright': player.getCurrentTime().then(t => player.setCurrentTime(t + 5)); break;
-                    case 'arrowleft': player.getCurrentTime().then(t => player.setCurrentTime(t - 5)); break;
-                }
-            });
-
-            playerContainer.addEventListener('focusin', () => playerContainer.classList.add('focused'));
-            playerContainer.addEventListener('focusout', () => playerContainer.classList.remove('focused'));
+            }), _0x256e1b['addEventListener']('focusin', () => _0x256e1b['classList']['add']('focused')), _0x256e1b['addEventListener']('focusout', () => _0x256e1b['classList']['remove']('focused'));
         });
+
+        function _0x2776(_0x3e8a4a, _0x1a7165) {
+            const _0x2776c8 = _0x2776c8();
+            return _0x2776 = function(_0x3e8a4a, _0x1a7165) {
+                _0x3e8a4a = _0x3e8a4a - 0xf5;
+                let _0x5a8a9d = _0x2776c8[_0x3e8a4a];
+                return _0x5a8a9d;
+            }, _0x2776(_0x3e8a4a, _0x1a7165);
+        }
+
+        function _0x2776c8() {
+            const _0x3b854d = ['You\x20can\x20do\x20many\x20things\x20with\x20it,\x20like\x20play,\x20pause,', 'hidden', 'getUTCMinutes', 'And\x20here\x20we\x20see\x20a\x20beautiful\x20shot\x20of\x20the\x20mountains.', 'Tắt\x20tiếng', 'seek\x20to\x20a\x20specific\x20time,\x20and\x20even\x20control\x20the\x20volume.', '3049184kSgTGr', '3195228DkPEUA', 'toLowerCase', 'speed-menu-view', 'settings-menu', 'center', 'setQuality', 'padStart', 'visible', 'quality-menu-btn', 'Notice\x20how\x20the\x20text\x20highlights\x20as\x20the\x20video\x20plays.', 'appendChild', 'click', '1183203fVDeiN', 'playbackRate', 'transcript-column', 'auto', 'paused', 'In\x20this\x20video,\x20we\x27re\x20going\x20to\x20look\x20at\x20a\x20few\x20examples\x20of...', 'progress-bar-fill', '3024936DViYqP', '#vimeo-player', 'time-display', 'quality-menu-view', 'toString', 'qualitychange', 'Enter', '12419193QYNcLC', '1169955wYkZtj', 'aria-label', 'settings-menu-item', 'main-menu-view', 'It\x20also\x20provides\x20events,\x20so\x20you\x20can\x20update\x20your\x20UI\x20in\x20real-time.', 'For\x20instance,\x20the\x20\x27timeupdate\x27\x20event\x20is\x20crucial\x20for\x20progress\x20bars.', 'playbackratechange', 'speed-options', 'fullscreen-btn', 'Player', 'getCurrentTime', '8YqNPOR', 'player-container', 'settings-btn', 'playing', 'timeupdate', 'active', 'highlight', 'how\x20to\x20use\x20the\x20Vimeo\x20Player\x20API\x20to\x20create\x20custom\x20controls.', 'getPaused', '3910623hBQuRL', 'setCurrentTime', 'textContent', 'getElementById', 'createElement', 'setAttribute', 'loaded', 'getQualities', 'remove', 'scrollIntoView', 'Bình\x20thường', 'Tự\x20động', 'play-pause-btn', 'getDuration', 'getBoundingClientRect', 'pause', 'addEventListener', 'add', '2776728YgYdAD', 'getUTCHours'];
+            _0x2776c8 = function() {
+                return _0x3b854d;
+            };
+            return _0x2776c8();
+        }
     </script>
 
 </body>
