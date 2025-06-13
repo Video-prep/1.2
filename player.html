@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình phát Video có Transcript</title>
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <style>
+        :root {
+            --vimeo-blue: #00a8ff;
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --text-light: #e0e0e0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .layout-wrapper {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .player-column { flex: 3; }
+        .player-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 */
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .player-container iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+        .controls-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 0.3s ease;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 40%);
+        }
+        .player-container:hover .controls-overlay,
+        .player-container.paused .controls-overlay,
+        .player-container.focused .controls-overlay {
+            opacity: 1;
+        }
+        .central-play-container { display: flex; justify-content: center; align-items: center; height: 100%; }
+        .central-play-btn {
+            background: rgba(30, 30, 30, 0.7); border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%; width: 80px; height: 80px; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            color: white; font-size: 40px;
+        }
+        .central-play-btn:hover { transform: scale(1.1); background: rgba(0, 168, 255, 0.8); }
+        .player-container.playing .central-play-container { display: none; }
+        .control-bar {
+            padding: 10px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+        .control-group { display: flex; align-items: center; gap: 15px; }
+        .control-group.right { margin-left: auto; }
+        .control-button {
+            background: none; border: none; cursor: pointer; padding: 5px;
+            display: flex; color: white; font-size: 22px;
+        }
+        .control-button:hover { transform: scale(1.15); }
+        .play-pause-btn .pause-icon { display: none; }
+        .player-container.playing .play-pause-btn .play-icon { display: none; }
+        .player-container.playing .play-pause-btn .pause-icon { display: block; }
+        .progress-bar-container {
+            width: 100%;
+            order: -1; /* Make it appear on top */
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .progress-bar-fill { height: 100%; background-color: var(--vimeo-blue); border-radius: 5px; width: 0%; }
+        .time-display { font-size: 0.9em; user-select: none; }
+        .volume-container { display: flex; align-items: center; gap: 8px; }
+        .volume-slider { -webkit-appearance: none; appearance: none; width: 70px; height: 5px; background: rgba(255, 255, 255, 0.3); border-radius: 5px; outline: none; transition: width 0.2s ease-in-out; }
+        .volume-container:hover .volume-slider { width: 80px; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; background: white; cursor: pointer; border-radius: 50%; }
+        .volume-slider::-moz-range-thumb { width: 15px; height: 15px; background: white; cursor: pointer; border-radius: 50%; }
+        .volume-btn .volume-high-icon { display: block; }
+        .volume-btn .volume-mute-icon { display: none; }
+        .player-container.muted .volume-btn .volume-high-icon { display: none; }
+        .player-container.muted .volume-btn .volume-mute-icon { display: block; }
+        .settings-menu {
+            position: absolute; bottom: 60px; right: 10px;
+            background-color: var(--dark-surface); border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px;
+            visibility: hidden; opacity: 0; transform: translateY(10px);
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .settings-menu.visible { visibility: visible; opacity: 1; transform: translateY(0); }
+        .settings-menu-view { padding: 8px; }
+        .settings-menu-item {
+            background: none; border: none; color: var(--text-light); font-size: 1em; width: 100%;
+            padding: 10px 12px; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center; border-radius: 4px; text-align: left;
+        }
+        .settings-menu-item:hover { background-color: #333; }
+        .settings-menu-item .current-value { color: #aaa; }
+        .settings-menu-item.active { background-color: var(--vimeo-blue); color: #000; font-weight: bold; }
+        .menu-header { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #444; font-weight: bold; }
+        .back-btn { margin-right: 10px; cursor: pointer; }
+        .transcript-column {
+            flex: 1.2;
+            background-color: var(--dark-surface);
+            border-radius: 12px;
+            padding: 15px;
+            max-height: calc(1200px * 0.75 * 0.5625);
+            overflow-y: auto;
+            display: none;
+        }
+        .transcript-column.visible { display: block; }
+        .transcript-line { padding: 8px; margin-bottom: 5px; border-radius: 4px; transition: background-color 0.3s ease; cursor: pointer; }
+        .transcript-line:hover { background-color: #333; }
+        .transcript-line.highlight { background-color: var(--vimeo-blue); color: #000; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="layout-wrapper">
+        <div class="player-column">
+            <div id="player-container" class="player-container paused">
+                <iframe id="vimeo-player"
+                        src="https://player.vimeo.com/video/766721106?app_id=122963&controls=0&dnt=1"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen></iframe>
+
+                <div id="controls-overlay" class="controls-overlay">
+                    <div class="central-play-container">
+                        <button id="central-play-btn" class="central-play-btn" aria-label="Phát video">▶</button>
+                    </div>
+
+                    <div class="control-bar">
+                        <div class="progress-bar-container" id="progress-bar-container">
+                            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                        </div>
+
+                        <div class="control-group left">
+                            <button id="play-pause-btn" class="control-button" aria-label="Phát hoặc Tạm dừng">
+                                <span class="play-icon">▶</span>
+                                <span class="pause-icon">❚❚</span>
+                            </button>
+                            <div class="volume-container">
+                                <button id="volume-btn" class="control-button volume-btn" aria-label="Tắt/Bật tiếng">
+                                    <span class="volume-high-icon">🔊</span>
+                                    <span class="volume-mute-icon">🔇</span>
+                                </button>
+                                <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Điều chỉnh âm lượng">
+                            </div>
+                            <div id="time-display" class="time-display">00:00 / 00:00</div>
+                        </div>
+
+                        <div class="control-group right">
+                            <button id="transcript-btn" class="control-button" aria-label="Bật/Tắt Lời thoại">📝</button>
+                            <button id="settings-btn" class="control-button" aria-label="Mở Cài đặt">⚙️</button>
+                            <button id="fullscreen-btn" class="control-button" aria-label="Toàn màn hình">⛶</button>
+                        </div>
+                    </div>
+
+                    <div id="settings-menu" class="settings-menu">
+                        <div id="main-menu-view" class="settings-menu-view">
+                            <button id="quality-menu-btn" class="settings-menu-item"><span>Chất lượng</span><span id="current-quality" class="current-value">Tự động</span></button>
+                            <button id="speed-menu-btn" class="settings-menu-item"><span>Tốc độ</span><span id="current-speed" class="current-value">Bình thường</span></button>
+                        </div>
+                        <div id="quality-menu-view" class="settings-menu-view hidden"><div class="menu-header"><span class="back-btn" role="button">❮</span><span>Chất lượng</span></div><div id="quality-options"></div></div>
+                        <div id="speed-menu-view" class="settings-menu-view hidden"><div class="menu-header"><span class="back-btn" role="button">❮</span><span>Tốc độ</span></div><div id="speed-options"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="transcript-column" class="transcript-column"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const iframe = document.querySelector('#vimeo-player');
+            const player = new Vimeo.Player(iframe);
+            const playerContainer = document.getElementById('player-container');
+            const centralPlayBtn = document.getElementById('central-play-btn');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const timeDisplay = document.getElementById('time-display');
+            const progressBarContainer = document.getElementById('progress-bar-container');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const transcriptBtn = document.getElementById('transcript-btn');
+            const transcriptColumn = document.getElementById('transcript-column');
+            const volumeBtn = document.getElementById('volume-btn');
+            const volumeSlider = document.getElementById('volume-slider');
+            const settingsBtn = document.getElementById('settings-btn');
+            const settingsMenu = document.getElementById('settings-menu');
+            const mainMenuView = document.getElementById('main-menu-view');
+            const qualityMenuView = document.getElementById('quality-menu-view');
+            const speedMenuView = document.getElementById('speed-menu-view');
+            const qualityMenuBtn = document.getElementById('quality-menu-btn');
+            const speedMenuBtn = document.getElementById('speed-menu-btn');
+            const qualityOptionsContainer = document.getElementById('quality-options');
+            const speedOptionsContainer = document.getElementById('speed-options');
+            const currentQualityEl = document.getElementById('current-quality');
+            const currentSpeedEl = document.getElementById('current-speed');
+            const backBtns = document.querySelectorAll('.back-btn');
+
+            // Trong ứng dụng thực tế, dữ liệu này nên được tải từ một file hoặc API
+            const transcriptData = [
+                { start: 0, end: 4.13, text: "In this video, we're going to look at a few examples of..." },
+                { start: 4.13, end: 8.43, text: "how to use the Vimeo Player API to create custom controls." },
+                { start: 8.43, end: 11.27, text: "You can do many things with it, like play, pause," },
+                { start: 11.27, end: 14.89, text: "seek to a specific time, and even control the volume." },
+                { start: 14.89, end: 18.35, text: "It also provides events, so you can update your UI in real-time." },
+                { start: 18.35, end: 21.43, text: "For instance, the 'timeupdate' event is crucial for progress bars." },
+                { start: 21.43, end: 24.5, text: "And here we see a beautiful shot of the mountains." },
+                { start: 24.5, end: 28.0, text: "Notice how the text highlights as the video plays." },
+                { start: 28.0, end: 32.0, text: "This creates a much more engaging experience for the viewer." }
+            ];
+
+            let transcriptLines = [];
+            let currentHighlightIndex = -1;
+            let duration = 0;
+
+            const formatTime = (seconds) => {
+                const date = new Date(seconds * 1000);
+                const hh = date.getUTCHours();
+                const mm = date.getUTCMinutes();
+                const ss = date.getUTCSeconds().toString().padStart(2, '0');
+                return hh ? `${hh}:${mm.toString().padStart(2, '0')}:${ss}` : `${mm}:${ss}`;
+            };
+
+            const togglePlay = () => {
+                player.getPaused().then(paused => paused ? player.play() : player.pause());
+            };
+
+            const renderTranscript = () => {
+                transcriptColumn.innerHTML = '';
+                transcriptData.forEach((line) => {
+                    const p = document.createElement('p');
+                    p.className = 'transcript-line';
+                    p.textContent = line.text;
+                    p.dataset.startTime = line.start;
+                    p.tabIndex = 0;
+                    p.setAttribute('role', 'button');
+                    p.addEventListener('click', () => player.setCurrentTime(line.start));
+                    p.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') player.setCurrentTime(line.start);
+                    });
+                    transcriptColumn.appendChild(p);
+                    transcriptLines.push(p);
+                });
+            };
+
+            const updateTranscriptHighlight = (currentTime) => {
+                const newHighlightIndex = transcriptData.findIndex(line => currentTime >= line.start && currentTime < line.end);
+                if (newHighlightIndex !== -1 && newHighlightIndex !== currentHighlightIndex) {
+                    if (currentHighlightIndex !== -1) {
+                        transcriptLines[currentHighlightIndex].classList.remove('highlight');
+                    }
+                    transcriptLines[newHighlightIndex].classList.add('highlight');
+                    transcriptLines[newHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    currentHighlightIndex = newHighlightIndex;
+                }
+            };
+
+            const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+            const showMenuView = (viewToShow) => {
+                mainMenuView.classList.add('hidden');
+                qualityMenuView.classList.add('hidden');
+                speedMenuView.classList.add('hidden');
+                viewToShow.classList.remove('hidden');
+            };
+
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsMenu.classList.toggle('visible');
+                showMenuView(mainMenuView);
+            });
+            qualityMenuBtn.addEventListener('click', () => showMenuView(qualityMenuView));
+            speedMenuBtn.addEventListener('click', () => showMenuView(speedMenuView));
+            backBtns.forEach(btn => btn.addEventListener('click', () => showMenuView(mainMenuView)));
+            document.addEventListener('click', (e) => {
+                if (!settingsMenu.contains(e.target) && !settingsBtn.contains(e.target)) {
+                    settingsMenu.classList.remove('visible');
+                }
+            });
+
+            const renderQualityOptions = (qualities) => {
+                qualityOptionsContainer.innerHTML = '';
+                let activeQualityLabel = 'Tự động';
+                const autoItem = document.createElement('button');
+                autoItem.className = 'settings-menu-item';
+                autoItem.textContent = 'Tự động';
+                if (!qualities.some(q => q.active)) autoItem.classList.add('active');
+                autoItem.addEventListener('click', () => { player.setQuality('auto'); settingsMenu.classList.remove('visible'); });
+                qualityOptionsContainer.appendChild(autoItem);
+                qualities.forEach(q => {
+                    const item = document.createElement('button');
+                    item.className = 'settings-menu-item';
+                    item.textContent = q.label;
+                    if (q.active) {
+                        item.classList.add('active');
+                        activeQualityLabel = q.label;
+                    }
+                    item.addEventListener('click', () => { player.setQuality(q.id); settingsMenu.classList.remove('visible'); });
+                    qualityOptionsContainer.appendChild(item);
+                });
+                currentQualityEl.textContent = activeQualityLabel;
+            };
+
+            const renderSpeedOptions = (currentRate) => {
+                speedOptionsContainer.innerHTML = '';
+                speeds.forEach(speed => {
+                    const item = document.createElement('button');
+                    item.className = 'settings-menu-item';
+                    item.textContent = speed === 1 ? 'Bình thường' : `${speed}x`;
+                    if (speed === currentRate) item.classList.add('active');
+                    item.addEventListener('click', () => { player.setPlaybackRate(speed); settingsMenu.classList.remove('visible'); });
+                    speedOptionsContainer.appendChild(item);
+                });
+                currentSpeedEl.textContent = currentRate === 1 ? 'Bình thường' : `${currentRate}x`;
+            };
+
+            player.on('loaded', () => {
+                player.getDuration().then(d => {
+                    duration = d;
+                    timeDisplay.textContent = `00:00 / ${formatTime(duration)}`;
+                });
+                player.getQualities().then(q => renderQualityOptions(q));
+                renderSpeedOptions(1);
+                renderTranscript();
+            });
+
+            player.on('play', () => {
+                playerContainer.classList.remove('paused');
+                playerContainer.classList.add('playing');
+                playPauseBtn.setAttribute('aria-label', 'Tạm dừng');
+            });
+            player.on('pause', () => {
+                playerContainer.classList.add('paused');
+                playerContainer.classList.remove('playing');
+                playPauseBtn.setAttribute('aria-label', 'Phát');
+            });
+            player.on('timeupdate', (data) => {
+                progressBarFill.style.width = `${data.percent * 100}%`;
+                timeDisplay.textContent = `${formatTime(data.seconds)} / ${formatTime(duration)}`;
+                updateTranscriptHighlight(data.seconds);
+            });
+            player.on('qualitychange', () => player.getQualities().then(q => renderQualityOptions(q)));
+            player.on('playbackratechange', (data) => renderSpeedOptions(data.playbackRate));
+            player.on('volumechange', (data) => {
+                volumeSlider.value = data.volume;
+                playerContainer.classList.toggle('muted', data.volume === 0);
+                volumeBtn.setAttribute('aria-label', data.volume === 0 ? 'Bật tiếng' : 'Tắt tiếng');
+            });
+
+            centralPlayBtn.addEventListener('click', togglePlay);
+            playPauseBtn.addEventListener('click', togglePlay);
+            fullscreenBtn.addEventListener('click', () => player.requestFullscreen());
+            progressBarContainer.addEventListener('click', (e) => {
+                const rect = progressBarContainer.getBoundingClientRect();
+                const newTime = duration * ((e.clientX - rect.left) / rect.width);
+                player.setCurrentTime(newTime);
+            });
+            transcriptBtn.addEventListener('click', () => transcriptColumn.classList.toggle('visible'));
+            volumeSlider.addEventListener('input', (e) => player.setVolume(e.target.value));
+            volumeBtn.addEventListener('click', () => {
+                player.getVolume().then(volume => player.setVolume(volume > 0 ? 0 : 1));
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                switch(e.key.toLowerCase()) {
+                    case ' ': e.preventDefault(); togglePlay(); break;
+                    case 'm': volumeBtn.click(); break;
+                    case 'f': fullscreenBtn.click(); break;
+                    case 'arrowright': player.getCurrentTime().then(t => player.setCurrentTime(t + 5)); break;
+                    case 'arrowleft': player.getCurrentTime().then(t => player.setCurrentTime(t - 5)); break;
+                }
+            });
+
+            playerContainer.addEventListener('focusin', () => playerContainer.classList.add('focused'));
+            playerContainer.addEventListener('focusout', () => playerContainer.classList.remove('focused'));
+        });
+    </script>
+
+</body>
+</html>
